@@ -5,7 +5,7 @@
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=qt6-full-git
-pkgver=6.0.0_r5244.g5b22f8ec
+pkgver=6.0.0_r5248.g5a1ed719
 pkgrel=1
 arch=($CARCH)
 url='https://www.qt.io'
@@ -87,7 +87,7 @@ build() {
 package() {
   DESTDIR="$pkgdir" cmake --install build
 
-  install -Dm644 qtbase/LICENSE* -t "$pkgdir"/usr/share/licenses/$pkgbase
+  install -Dm644 qtbase/LICENSES/* -t "$pkgdir"/usr/share/licenses/$pkgbase
 
   # Symlinks for backwards compatibility
   mkdir -p "$pkgdir"/usr/bin
