@@ -4,14 +4,14 @@
 # Contributor: Felix Yan <felixonmars@archlinux.org>
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
-pkgname=qt6-full-git
-pkgver=6.0.0_r5248.g5a1ed719
+pkgname=qt6-full-git-msan
+pkgver=6.0.0_r5257.g5c6814fb
 pkgrel=1
 arch=($CARCH)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
 pkgdesc='A cross-platform application and UI framework'
-depends=(libjpeg-turbo xcb-util-keysyms xcb-util-renderutil libgl fontconfig xdg-utils
+depends=(libc++-msan libjpeg-turbo xcb-util-keysyms xcb-util-renderutil libgl fontconfig xdg-utils
          shared-mime-info xcb-util-wm libxrender libxi sqlite xcb-util-image mesa
          tslib libinput libxkbcommon-x11 libproxy libcups double-conversion md4c brotli)
 makedepends=(cmake libfbclient mariadb-libs unixodbc postgresql-libs alsa-lib gst-plugins-base-libs
@@ -67,8 +67,11 @@ build() {
   done
   git -c protocol.file.allow=always submodule update "${_modules[@]}"
   popd
+  export CC=clang CXX=clang++
   cmake -G Ninja -B build -S qt6 \
     -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_C_FLAGS="-fsanitize=memory -fsanitize-recover=memory" \
+    -DCMAKE_CXX_FLAGS="-fsanitize=memory -fsanitize-recover=memory" \
     -DINSTALL_BINDIR=lib/qt6/bin \
     -DINSTALL_DOCDIR=share/doc/qt6 \
     -DINSTALL_ARCHDATADIR=lib/qt6 \
@@ -82,7 +85,8 @@ build() {
     -DFEATURE_zstd=OFF \
     -DQT_USE_CCACHE=ON \
     -DQT_FEATURE_assistant=OFF \
-    -DQT_FEATURE_testlib=OFF
+    -DQT_FEATURE_testlib=OFF \
+    -DQT_FEATURE_stdlib_libcpp=ON
   VERBOSE=1 cmake --build build
 }
 
