@@ -27,7 +27,9 @@ conflicts=(${pkgname%-git} qt6-multimedia-ffmpeg)
 provides=(${pkgname%-git} qt6-multimedia-ffmpeg)
 _modules=(
     qtbase
+    qtlocation
     qtmultimedia
+    qtpositioning
     qtserialport
     qtshadertools
     qtsvg
